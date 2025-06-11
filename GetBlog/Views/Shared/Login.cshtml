@@ -1,0 +1,109 @@
+﻿@model GetBlog.Models.LoginViewModel
+@{
+    Layout = null; // No layout for this page
+    ViewBag.Title = "ورود به پنل مدیریت";
+}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GetBlog | @ViewBag.Title</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Content/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/Content/Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/Admin/dist/css/adminlte.min.css">
+    <!-- RTL style -->
+    <link rel="stylesheet" href="~/Content/Admin/dist/css/rtl.css">
+    <style>
+        .brClass {
+            border-radius: 0 .25rem .25rem 0 !important;
+        }
+
+        .inputBrClass {
+            border-radius: .25rem 0 0 .25rem !important;
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="@Url.Action("Index", "Home", new { area = "" })" class="h1"><b>شرکت </b>گویا</a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">ورود</p>
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control inputBrClass", placeholder = "نام کاربری" })
+                        <div class="input-group-append">
+                            <div class="input-group-text brClass">
+                                <span class="fas fa-user"></span> @* Changed from fa-envelope to fa-user for Username *@
+                            </div>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+
+                    <div class="input-group mb-3">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control inputBrClass", placeholder = "رمز ورود" })
+                        <div class="input-group-append">
+                            <div class="input-group-text brClass">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                @Html.CheckBoxFor(m => m.RememberMe, new { id = "remember" })
+                                <label for="remember">
+                                    مرا به خاطر بسپار
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">ورود</button>
+                        </div>
+                    </div>
+                }
+
+                <div class="social-auth-links text-center mt-2 mb-3">
+                    <a href="#" class="btn btn-block btn-primary disabled">
+                        <i class="fab fa-facebook mr-2"></i> ورود با فیس بوک
+                    </a>
+                    <a href="#" class="btn btn-block btn-danger disabled">
+                        <i class="fab fa-google-plus mr-2"></i> ورود به گوگل
+                    </a>
+                </div>
+
+                <p class="mb-1">
+                    @* <a href="#">من رمزم رو فراموش کردم</a> *@
+                </p>
+                <p class="mb-0">
+                    <a href="@Url.Action("Register", "Account")" class="text-center">عضویت جدید</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/Content/Admin/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Content/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/Content/Admin/dist/js/adminlte.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - داشبورد</title>
+
+    <!-- Fonts and Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="~/Content/Admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/jqvmap/jqvmap.min.css" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/Content/Admin/plugins/summernote/summernote-bs4.min.css" />
+
+    <!-- Theme and Custom CSS -->
+    <link rel="stylesheet" href="~/Content/Admin/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="~/Content/Admin/dist/css/rtl.css" />
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/Content/Admin/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" />
+        </div>
+
+        <!-- Navbar -->
+        @Html.Partial("../Partials/_AdminNavbar")
+
+        <!-- Sidebar -->
+        @Html.Partial("../Partials/_AdminSidebar")
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    @* Optional page header content *@
+                    @RenderSection("ContentHeader", false)
+                </div>
+            </div>
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>&copy; 2014-2021 <a href="https://aminarjmand.com">امین ارجمند</a>.</strong> تمام حقوق محفوظ می باشد.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>نسخه</b> 3.2.0
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/Content/Admin/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Content/Admin/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <script src="~/Content/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/Admin/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/Content/Admin/plugins/sparklines/sparkline.js"></script>
+    <script src="~/Content/Admin/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/Content/Admin/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <script src="~/Content/Admin/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="~/Content/Admin/plugins/moment/moment.min.js"></script>
+    <script src="~/Content/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Content/Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/Content/Admin/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="~/Content/Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="~/Content/Admin/dist/js/adminlte.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

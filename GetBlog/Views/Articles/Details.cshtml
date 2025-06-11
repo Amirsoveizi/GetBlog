@@ -1,0 +1,101 @@
+﻿@model GetBlog.Models.Article
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Get the related articles we passed from the controller
+    var relatedArticles = ViewBag.RelatedArticles as List<GetBlog.Models.Article>;
+}
+
+<section class="magazine-hero section-two">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1 d-none d-md-block">
+                @* Social icons - can be made dynamic later *@
+            </div>
+
+            <div class="col-md-11">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="section-title">
+                            <h4 class="title fw-semibold">@Model.Title</h4>
+
+                            <div class="d-flex mt-4 pb-4 align-items-center justify-content-between">
+                                <div class="d-flex author align-items-center">
+                                    <img src="@(Model.Author?.Profile?.ProfilePictureUrl ?? "https://via.placeholder.com/50")" class="avatar avatar-md-sm rounded-pill" alt="">
+                                    <div class="me-2">
+                                        <h6 class="user d-block mb-0"><a href="javascript:void(0)" class="text-dark">@(Model.Author?.FullName ?? "Anonymous")</a></h6>
+                                        <small class="date text-muted mb-0">@(Model.Author?.Profile?.Bio ?? "Content Author")</small>
+                                    </div>
+                                </div>
+                                @* "Follow" button placeholder *@
+                            </div>
+
+                            <ul class="list-inline d-flex pt-4 mb-0 border-top justify-content-between">
+                                <li class="list-inline-item text-muted"><i class="uil uil-calender h5 text-dark"></i> @(Model.PublishedDate.HasValue ? Model.PublishedDate.Value.ToShortDateString() : "")</li>
+                                @* Reading time can be a future feature *@
+                            </ul>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.FeaturedImageUrl))
+                        {
+                            <div class="mt-4">
+                                <img src="@Url.Content(Model.FeaturedImageUrl)" class="img-fluid rounded shadow" alt="@Model.Title">
+                            </div>
+                        }
+
+                        <div class="mt-4 article-content">
+                            @* Html.Raw() is ESSENTIAL to render the HTML from your admin editor *@
+                            @Html.Raw(Model.Content)
+                        </div>
+
+                        <div class="card mt-4">
+                            <h5 class="card-title mb-0">نظرات :</h5>
+
+                            <ul class="media-list list-unstyled mt-4 mb-0">
+                                @* Loop through only top-level, approved comments. The partial will handle replies. *@
+                                @foreach (var comment in Model.Comments.Where(c => c.IsApproved && c.ParentCommentId == null).OrderBy(c => c.CreatedDate))
+                                {
+                                    @Html.Partial("_CommentPartial", comment)
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="card mt-4">
+                            @* The "Leave a comment" form - this will need a dedicated POST action to become functional *@
+                        </div>
+
+                        @if (relatedArticles != null && relatedArticles.Any())
+                        {
+                            <div class="card mt-4">
+                                <h5 class="card-title mb-0">اخبار مرتبط :</h5>
+                                <div class="row">
+                                    @foreach (var related in relatedArticles)
+                                    {
+                                        <div class="col-lg-6 mt-4 pt-2">
+                                            <div class="card border-0 bg-white shadow rounded blog blog-primary overflow-hidden">
+                                                <img src="@Url.Content(related.FeaturedImageUrl ?? "https://via.placeholder.com/400x200")" class="img-fluid" alt="">
+                                                <div class="card-body">
+                                                    <span class="text-muted">@(related.PublishedDate.HasValue ? related.PublishedDate.Value.ToShortDateString() : "")</span>
+                                                    <a href="@Url.Action("Details", "Articles", new { slug = related.Slug })" class="text-dark h5 title">@related.Title</a>
+                                                    <a href="@Url.Action("Details", "Articles", new { slug = related.Slug })" class="read-more d-block mt-3">
+                                                        بیشتر بخوانید <i class="uil uil-arrow-left align-middle"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                        <div class="sticky-bar">
+                            @* Sidebar content - recent posts widget should be a child action *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,153 @@
+﻿@model GetBlog.Models.Article
+
+@{
+    ViewBag.Title = "مقاله جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">ایجاد مقاله جدید</h3>
+    </div>
+
+    @using (Html.BeginForm("Create", "Articles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title, "عنوان مقاله")
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "عنوان مقاله را وارد کنید" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Content, "محتوای اصلی")
+                        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 15, placeholder = "محتوای مقاله خود را اینجا بنویسید..." })
+                        @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Excerpt, "خلاصه")
+                        @Html.TextAreaFor(model => model.Excerpt, new { @class = "form-control", rows = 3, placeholder = "یک خلاصه کوتاه برای نمایش در لیست مقالات (اختیاری)" })
+                        @Html.ValidationMessageFor(model => model.Excerpt, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+                <!-- Sidebar Column (3 out of 12) -->
+                <div class="col-md-3">
+
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">تنظیمات انتشار</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                @Html.Label("AuthorId", "نویسنده")
+                                @Html.DropDownList("AuthorId", (SelectList)ViewBag.AuthorId, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <div class="icheck-primary d-inline">
+                                    @Html.CheckBoxFor(model => model.IsPublished, new { id = "isPublishedCheckbox" })
+                                    <label for="isPublishedCheckbox">
+                                        انتشار مقاله
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">طبقه بندی ها</h3>
+                        </div>
+                        <div class="card-body" style="height: 150px; overflow-y: auto;">
+                            @* Use ListBox for multi-select. A JS library like Select2 is recommended for a better UI. *@
+                            @Html.ListBox("categoryIds", (MultiSelectList)ViewBag.CategoriesList, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">برچسب ها</h3>
+                        </div>
+                        <div class="card-body" style="height: 150px; overflow-y: auto;">
+                            @Html.ListBox("tagIds", (MultiSelectList)ViewBag.TagsList, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Featured Image Section (Updated for Direct Upload) -->
+            <h4>تصویر شاخص</h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* This hidden input will store the final URL of the uploaded image after it's saved *@
+                        @Html.HiddenFor(model => model.FeaturedImageUrl, new { id = "featured_image_url" })
+
+                        <label for="imageUpload">بارگذاری تصویر جدید</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                @* This is the file input that opens the file explorer *@
+                                <input type="file" class="custom-file-input" id="imageUpload" name="imageUpload">
+                                <label class="custom-file-label" for="imageUpload">انتخاب فایل</label>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            تصویر به صورت خودکار در کتابخانه رسانه ذخیره خواهد شد.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    @* This will show a preview of the selected file before uploading OR the existing image on the Edit page *@
+                    <img id="featured_image_preview" src="@Model.FeaturedImageUrl" alt="Image Preview"
+                         style="max-height: 200px; margin-top: 10px; @(string.IsNullOrEmpty(Model.FeaturedImageUrl) ? "display: none;" : "")" />
+                </div>
+            </div>
+            <!-- End Featured Image Section -->
+
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">ذخیره مقاله</button>
+            @Html.ActionLink("انصراف", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Script to show the selected filename in the bootstrap custom file input
+            $('#imageUpload').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+
+                // --- Live Preview Script ---
+                // Check if a file was selected
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // Set the src of the preview image to the data URL and show it
+                        $('#featured_image_preview').attr('src', e.target.result).show();
+                    };
+
+                    // Read the image file as a data URL.
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+}
