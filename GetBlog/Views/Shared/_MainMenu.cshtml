@@ -9,7 +9,7 @@
         if (category.ChildCategories != null && category.ChildCategories.Any())
         {
             <li class="has-submenu parent-menu-item">
-                <a href="javascript:void(0)">@category.Name <i class="mdi mdi-chevron-down"></i></a>
+                <a>@category.Name <i class="mdi mdi-chevron-down"></i></a>
                 <ul class="submenu">
                     @*<li><a href="@Url.Action("CategoryIndex", "Articles", new { categorySlug = category.Slug })" class="sub-menu-item">همه @category.Name</a></li>*@
 
@@ -25,5 +25,4 @@
             <li><a href="@Url.Action("Category", "Articles", new { categorySlug = category.Slug })" class="sub-menu-item">@category.Name</a></li>
         }
     }
-
 </ul>

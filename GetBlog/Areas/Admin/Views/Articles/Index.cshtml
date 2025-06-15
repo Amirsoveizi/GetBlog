@@ -26,8 +26,8 @@
         {
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100 shadow-sm">
-
-                    <a href="@Url.Action("Details", "Articles", new { id = article.ArticleId })">
+                    <a href="@Url.Action("Details", "Articles",new { id = article.ArticleId, area = "" })">
+                        @*<a href="@Url.Action("Details", "Articles", new { id = article.ArticleId })">*@
 
                         @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
                         {
@@ -42,20 +42,60 @@
 
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="@Url.Action("Details", "Articles", new { id = article.ArticleId })" class="text-dark">
+                            <a href="@Url.Action("Details", "Articles",new { id = article.ArticleId, area = "" })" class="text-dark">
                                 @article.Title
                             </a>
                         </h5>
                     </div>
 
-                    <div class="card-footer bg-white border-top-0">
-                        <small class="text-muted">
-                            منتشر شده در: @(article.PublishedDate.HasValue ? article.PublishedDate.Value.ToShortDateString() : "N/A")
-                        </small>
+                    <div class="row">
+                        <div class="card-footer bg-white border-top-0">
+                            <small class="text-muted">
+                                منتشر شده در: @(article.PublishedDate.HasValue ? article.PublishedDate.Value.ToShortDateString() : "N/A")
+                            </small>
+                        </div>
+
+                        <div class="row">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger end-0" data-id="@article.ArticleId">Delete</button>
+                        </div>
                     </div>
+
 
                 </div>
             </div>
         }
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".delete-article").click(function (e) {
+                e.preventDefault();
+
+                var articleId = $(this).data("id");
+
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                $.ajax({
+                    url: '@Url.Action("Delete", "Article", new { area = "Admin" })',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: articleId
+                    },
+                    success: function (response) {
+                        alert("Article deleted successfully!");
+                        location.reload(); 
+                    },
+                    error: function (xhr) {
+                        alert("An error occurred while deleting the article.");
+                    }
+                });
+            });
+        });
+    </script>
+}
